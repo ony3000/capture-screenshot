@@ -11,6 +11,7 @@ if not os.path.exists(directory_name):
 
 options = webdriver.ChromeOptions()
 options.add_argument('--ignore-certificate-errors')
+options.add_argument('--start-maximized')
 options.add_argument('--test-type')
 driver = webdriver.Chrome('./chromedriver.exe', chrome_options=options)
 
