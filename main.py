@@ -22,5 +22,8 @@ with open('./capture_list.csv') as csv_file:
         url = row[1]
         driver.get(url)
         driver.save_screenshot(f'{directory_name}/{name}.png')
+        driver.execute_script('document.querySelector("body").style.setProperty("height", "auto")')
+        el = driver.find_element_by_tag_name('body')
+        el.screenshot(f'{directory_name}/{name}_full.png')
 
 driver.close()
