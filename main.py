@@ -9,11 +9,8 @@ directory_name = f'screenshots_{now}'
 if not os.path.exists(directory_name):
     os.makedirs(directory_name)
 
-options = webdriver.ChromeOptions()
-options.add_argument('--ignore-certificate-errors')
-options.add_argument('--start-maximized')
-options.add_argument('--test-type')
-driver = webdriver.Chrome('./chromedriver.exe', chrome_options=options)
+driver = webdriver.Firefox()
+driver.maximize_window()
 
 with open('./capture_list.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
@@ -21,9 +18,8 @@ with open('./capture_list.csv') as csv_file:
         name = row[0]
         url = row[1]
         driver.get(url)
-        driver.save_screenshot(f'{directory_name}/{name}.png')
-        driver.execute_script('document.querySelector("body").style.setProperty("height", "auto")')
-        el = driver.find_element_by_tag_name('body')
-        el.screenshot(f'{directory_name}/{name}_full.png')
+        time.sleep(1)
+        el = driver.find_element_by_tag_name('html')
+        el.screenshot(f'{directory_name}/{name}.png')
 
 driver.close()
