@@ -6,6 +6,7 @@ authors = ["Hyeonjong <nianelo4@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+selenium = "^4.5.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.10.0"
