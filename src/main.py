@@ -2,17 +2,43 @@ import csv
 import os
 import time
 from dataclasses import dataclass
+from typing import Union
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.webdriver import WebDriver as ChromeWebDriver
+from selenium.webdriver.firefox.webdriver import WebDriver as FirefoxWebDriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 
 @dataclass
 class SiteFormat:
     name: str
     url: str
+
+
+def get_webdriver() -> Union[ChromeWebDriver, FirefoxWebDriver, None]:
+    driver: Union[ChromeWebDriver, FirefoxWebDriver, None] = None
+
+    try:
+        driver = webdriver.Firefox(
+            service=FirefoxService(executable_path=GeckoDriverManager().install())
+        )
+    except Exception as err:
+        pass
+
+    if not driver:
+        try:
+            driver = webdriver.Chrome(
+                service=ChromeService(executable_path=ChromeDriverManager().install())
+            )
+        except Exception as err:
+            pass
+
+    return driver
 
 
 def main() -> None:
@@ -41,9 +67,13 @@ def main() -> None:
             f.close()
             return
 
-        driver = webdriver.Chrome(
-            service=ChromeService(executable_path=ChromeDriverManager().install())
-        )
+        driver = get_webdriver()
+
+        if not driver:
+            f = open(f"{output_path}/NO_AVAILABLE_WEBDRIVERS", "x")
+            f.close()
+            return
+
         driver.maximize_window()
 
         for site in valid_sites:
