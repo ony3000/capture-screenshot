@@ -70,7 +70,7 @@ def main() -> None:
         driver = get_webdriver()
 
         if not driver:
-            f = open(f"{output_path}/NO_AVAILABLE_WEBDRIVERS", "x")
+            f = open(f"{output_path}/NO_AVAILABLE_BROWSERS", "x")
             f.close()
             return
 
