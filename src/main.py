@@ -24,7 +24,7 @@ def get_webdriver() -> Union[ChromeWebDriver, FirefoxWebDriver, None]:
     driver: Union[ChromeWebDriver, FirefoxWebDriver, None] = None
 
     try:
-        driver = webdriver.Firefox(
+        driver = webdriver.Firefox(  # type: ignore
             service=FirefoxService(executable_path=GeckoDriverManager().install())
         )
     except Exception as err:
