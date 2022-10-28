@@ -28,7 +28,7 @@ def get_webdriver() -> Union[ChromeWebDriver, FirefoxWebDriver, None]:
             service=FirefoxService(executable_path=GeckoDriverManager().install())
         )
     except Exception as err:
-        pass
+        print(err)
 
     if not driver:
         try:
@@ -36,7 +36,7 @@ def get_webdriver() -> Union[ChromeWebDriver, FirefoxWebDriver, None]:
                 service=ChromeService(executable_path=ChromeDriverManager().install())
             )
         except Exception as err:
-            pass
+            print(err)
 
     return driver
 
@@ -55,7 +55,7 @@ def main() -> None:
                 url = row[1]
                 valid_sites.append(SiteFormat(name=name, url=url))
             except Exception as err:
-                pass
+                print(err)
 
         output_path = f"{base_path}/screenshots/{now}"
 
