@@ -7,11 +7,8 @@ from typing import Union
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeWebDriver
-from selenium.webdriver.firefox.webdriver import WebDriver as FirefoxWebDriver
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
 
 
 @dataclass
@@ -20,23 +17,15 @@ class SiteFormat:
     url: str
 
 
-def get_webdriver() -> Union[ChromeWebDriver, FirefoxWebDriver, None]:
-    driver: Union[ChromeWebDriver, FirefoxWebDriver, None] = None
+def get_webdriver() -> Union[ChromeWebDriver, None]:
+    driver: Union[ChromeWebDriver, None] = None
 
     try:
-        driver = webdriver.Firefox(  # type: ignore
-            service=FirefoxService(executable_path=GeckoDriverManager().install())
+        driver = webdriver.Chrome(
+            service=ChromeService(executable_path=ChromeDriverManager().install())
         )
     except Exception as err:
         print(err)
-
-    if not driver:
-        try:
-            driver = webdriver.Chrome(
-                service=ChromeService(executable_path=ChromeDriverManager().install())
-            )
-        except Exception as err:
-            print(err)
 
     return driver
 
@@ -70,7 +59,7 @@ def main() -> None:
         driver = get_webdriver()
 
         if not driver:
-            f = open(f"{output_path}/NO_AVAILABLE_BROWSERS", "x")
+            f = open(f"{output_path}/CHROME_BROWSER_REQUIRED", "x")
             f.close()
             return
 
