@@ -1,5 +1,7 @@
 import csv
 import os
+import re
+import sys
 import time
 from dataclasses import dataclass
 from typing import Union
@@ -11,8 +13,9 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 
-DESKTOP_WIDTH = 1920
-DESKTOP_HEIGHT = 1080
+MIN_WIDTH = 320
+DEFAULT_WIDTH = 1920
+DEFAULT_HEIGHT = 1080
 
 
 @dataclass
@@ -41,6 +44,15 @@ def get_webdriver() -> Union[ChromeWebDriver, None]:
 def main() -> None:
     now = time.strftime("%Y%m%d_%H%M%S")
     base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    for arg in sys.argv[1:]:
+        result = re.match(r"^--width=([0-9]+)$", arg)
+
+        if result:
+            parsed_width = int(result[1])
+
+            if parsed_width >= MIN_WIDTH:
+                DEFAULT_WIDTH = parsed_width
 
     with open(f"{base_path}/src/capture_list.csv") as csv_file:
         valid_sites: list[SiteFormat] = []
@@ -72,7 +84,7 @@ def main() -> None:
             return
 
         for site in valid_sites:
-            driver.set_window_size(DESKTOP_WIDTH, DESKTOP_HEIGHT)
+            driver.set_window_size(DEFAULT_WIDTH, DEFAULT_HEIGHT)
             driver.get(site.url)
             time.sleep(1)
 
@@ -81,7 +93,7 @@ def main() -> None:
             )
             assert type(site_height) is int
 
-            driver.set_window_size(DESKTOP_WIDTH, site_height)
+            driver.set_window_size(DEFAULT_WIDTH, site_height)
             driver.find_element(by=By.TAG_NAME, value="html").screenshot(
                 f"{output_path}/{site.name}.png"
             )
