@@ -1,5 +1,6 @@
 # capture-screenshot
-python, selenium을 이용한 페이지 캡처 프로그램
+python, selenium을 이용한 페이지 캡처 프로그램<br>
+(단, 스크롤 위치에 따라 동적으로 변하는 페이지의 경우, 캡처 결과가 예상과 다를 수 있다)
 
 ## Environment
 - Python 3.9
@@ -7,6 +8,7 @@ python, selenium을 이용한 페이지 캡처 프로그램
 - [Selenium](https://www.selenium.dev/)
 - [Black](https://black.readthedocs.io/en/stable/)
 - [mypy](http://www.mypy-lang.org/)
+- 이 프로그램을 실행하려는 기기에 설치된 크롬 브라우저
 
 ### How to run a script
 1. `src/example_list.csv`를 복사해서 `src/capture_list.csv`를 만든다.
