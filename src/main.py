@@ -8,7 +8,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver as ChromeWebDriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
+
+DESKTOP_WIDTH = 1920
+DESKTOP_HEIGHT = 1080
 
 
 @dataclass
@@ -21,8 +25,12 @@ def get_webdriver() -> Union[ChromeWebDriver, None]:
     driver: Union[ChromeWebDriver, None] = None
 
     try:
+        options = ChromeOptions()
+        options.headless = True
+
         driver = webdriver.Chrome(
-            service=ChromeService(executable_path=ChromeDriverManager().install())
+            service=ChromeService(executable_path=ChromeDriverManager().install()),
+            options=options,
         )
     except Exception as err:
         print(err)
@@ -63,13 +71,20 @@ def main() -> None:
             f.close()
             return
 
-        driver.maximize_window()
-
         for site in valid_sites:
+            driver.set_window_size(DESKTOP_WIDTH, DESKTOP_HEIGHT)
             driver.get(site.url)
             time.sleep(1)
-            el = driver.find_element(by=By.TAG_NAME, value="html")
-            el.screenshot(f"{output_path}/{site.name}.png")
+
+            site_height = driver.execute_script(  # type: ignore
+                "return document.body.parentNode.scrollHeight"
+            )
+            assert type(site_height) is int
+
+            driver.set_window_size(DESKTOP_WIDTH, site_height)
+            driver.find_element(by=By.TAG_NAME, value="html").screenshot(
+                f"{output_path}/{site.name}.png"
+            )
 
         driver.quit()
 
