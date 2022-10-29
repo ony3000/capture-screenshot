@@ -88,6 +88,9 @@ def main() -> None:
             driver.get(site.url)
             time.sleep(1)
 
+            driver.execute_script(  # type: ignore
+                "document.querySelector('html').style.overflowY = 'visible'"
+            )
             site_height = driver.execute_script(  # type: ignore
                 "return document.body.parentNode.scrollHeight"
             )
