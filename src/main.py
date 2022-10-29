@@ -88,11 +88,14 @@ def main() -> None:
             driver.get(site.url)
             time.sleep(1)
 
-            driver.execute_script(  # type: ignore
-                "document.querySelector('html').style.overflowY = 'visible'"
-            )
             site_height = driver.execute_script(  # type: ignore
-                "return document.body.parentNode.scrollHeight"
+                """return (() => {
+                    const elem = document.querySelector('html');
+
+                    elem.style.overflowY = 'visible';
+
+                    return elem.scrollHeight;
+                })();"""
             )
             assert type(site_height) is int
 
