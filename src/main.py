@@ -13,10 +13,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 
-MIN_WIDTH = 320
-DEFAULT_WIDTH = 1920
-DEFAULT_HEIGHT = 1080
-
 
 @dataclass
 class SiteFormat:
@@ -42,6 +38,10 @@ def get_webdriver() -> Union[ChromeWebDriver, None]:
 
 
 def main() -> None:
+    MIN_WIDTH = 320
+    DEFAULT_WIDTH = 1920
+    DEFAULT_HEIGHT = 1080
+
     now = time.strftime("%Y%m%d_%H%M%S")
     base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
